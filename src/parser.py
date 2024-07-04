@@ -46,7 +46,11 @@ class HH(Parser):
         """ Получение вакансий по ID работодателя """
 
         url = self.url + 'vacancies?employer_id=' + employer_id
-        self.params["page"] = 200
-        response = requests.get(url, headers=self.headers, params=self.params)
-        vacancies = response.json()["items"]
-        return vacancies
+        vacancies_list = []
+
+        while self.params["page"] != 50:
+            response = requests.get(url, headers=self.headers, params=self.params)
+            vacancies = response.json()["items"]
+            vacancies_list.extend(vacancies)
+            self.params['page'] += 1
+        return vacancies_list

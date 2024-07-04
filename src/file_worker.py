@@ -124,7 +124,7 @@ class WorkWithSQL(FileWork):
         with psycopg2.connect(**self.conn_params) as conn:
             with conn.cursor() as cur:
                 cur.execute("SELECT * FROM vacancies")
-        return cur.fetchall()
+                return cur.fetchall()
 
     def save_vacancy(self, vacancy):
         query = (f"INSERT INTO vacancies VALUES ("
