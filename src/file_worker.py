@@ -4,6 +4,9 @@ import psycopg2
 from os.path import abspath
 from abc import ABC, abstractmethod
 
+from src.parser import HH
+from src.vacancy import Vacancy
+
 
 class FileWork(ABC):
 
@@ -83,7 +86,7 @@ class FileWorkJson(FileWork):
 class WorkWithSQL(FileWork):
     def __init__(self):
         self.conn_params = {"host": "localhost",
-                            "database": "my_database",
+                            "dbname": "CourseWork5",
                             "user": "postgres",
                             "password": "12345"}
 
@@ -92,13 +95,24 @@ class WorkWithSQL(FileWork):
             with conn.cursor() as cur:
                 cur.execute("SELECT * FROM employers")
                 employers = cur.fetchall()
-                return employers
+        return employers
 
     def save_employer(self, employer):
+        query = (f"INSERT INTO employers VALUES ("
+                 f"'{employer.employer_id}', "
+                 f"'{employer.name}', "
+                 f"'{employer.open_vacancies}', "
+                 f"'{employer.vacancies_url}')")
         with psycopg2.connect(**self.conn_params) as conn:
             with conn.cursor() as cur:
-                cur.execute("INSERT INTO employers VALUES (employer.employer_id, ...)")
+                cur.execute(query)
                 conn.commit()
+        # Сохранение открытых вакансий работодателя
+        exam = HH()
+        vacancies = exam.employer_vacancies(employer.employer_id)
+        for vacancy in vacancies:
+            vac = Vacancy.new_vacancy(vacancy)
+            self.save_vacancy(vac)
 
     def delete_employers(self):
         with psycopg2.connect(**self.conn_params) as conn:
@@ -110,11 +124,18 @@ class WorkWithSQL(FileWork):
         with psycopg2.connect(**self.conn_params) as conn:
             with conn.cursor() as cur:
                 cur.execute("SELECT * FROM vacancies")
+        return cur.fetchall()
 
     def save_vacancy(self, vacancy):
+        query = (f"INSERT INTO vacancies VALUES ("
+                 f"'{vacancy.name}', "
+                 f"'{vacancy.area}', "
+                 f"'{vacancy.salary}', "
+                 f"'{vacancy.url}', "
+                 f"'{vacancy.employer_id}')")
         with psycopg2.connect(**self.conn_params) as conn:
             with conn.cursor() as cur:
-                cur.execute("INSERT INTO vacancies VALUES (vacancy.name, ...")
+                cur.execute(query)
                 conn.commit()
 
     def delete_vacancies(self):

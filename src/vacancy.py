@@ -1,15 +1,17 @@
 class Vacancy:
-    def __init__(self, name, area, salary, url):
+    def __init__(self, name, area, salary, url, employer_id):
         self.name = self.__validation_data(name)
         self.area = self.__validation_data(area)
         self.url = self.__validation_data(url)
         self.salary = salary
+        self.employer_id = employer_id
 
     def __str__(self):
         return (f"{self.name}\n"
                 f"Город: {self.area}\n"
                 f"Зарплата: {self.salary if self.salary else 'Не указана'}\n"
-                f"Ссылка: {self.url}")
+                f"Ссылка: {self.url}\n"
+                f"Employer_id: {self.employer_id}")
 
     def __lt__(self, other):
         if not self.salary:
@@ -40,4 +42,5 @@ class Vacancy:
         else:
             salary = 0
         url = vacancy.get("alternate_url")
-        return cls(name, area, salary, url)
+        employer_id = vacancy.get("employer").get("id")
+        return cls(name, area, salary, url, employer_id)
