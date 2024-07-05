@@ -5,6 +5,7 @@ from kivy.uix.label import Label
 from kivy.uix.modalview import ModalView
 
 from src.employer import Employer
+from src.vacancy import Vacancy
 
 
 class ResultWindow(ModalView):
@@ -19,7 +20,7 @@ class ResultWidget(BoxLayout):
         super().__init__(**kwargs)
         self.orientation = "vertical"
 
-        self.add_widget(LabelInfo(len(query)))
+        self.add_widget(LabelInfo(len(query[0])))
         self.add_widget(ResultBox(query))
         self.add_widget(NavigationBox())
 
@@ -36,9 +37,14 @@ class ResultBox(Carousel):
     def __init__(self, query, **kwargs):
         super().__init__(**kwargs)
 
-        for i in range(len(query)):
-            employer = Employer.new_employer(query[i])
-            self.add_widget(Label(text=str(employer), font_size=25))
+        if query[1] == "emp":
+            for i in range(len(query[0])):
+                employer = Employer.new_employer(query[0][i])
+                self.add_widget(Label(text=str(employer), font_size=25))
+        elif query[1] == "vac":
+            for i in range(len(query[0])):
+                vacancy = Vacancy.new_vacancy(query[0][i])
+                self.add_widget(Label(text=str(vacancy), font_size=25))
 
 
 class NavigationBox(BoxLayout):

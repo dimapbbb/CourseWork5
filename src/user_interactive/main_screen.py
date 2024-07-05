@@ -38,4 +38,6 @@ class MainButtons(Button):
     def on_press(self):
         if self.index:
             self.parent.parent.manager.current = "emp_scr"
+        elif not self.index:
+            self.parent.parent.manager.current = "vac_scr"
 
