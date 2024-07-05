@@ -32,15 +32,19 @@ class HH(Parser):
             vacancies = response.json()["items"]
             vacancies_list.extend(vacancies)
             self.params['page'] += 1
-        return vacancies_list
+        return [vacancies_list, "vac"]
 
     def load_employers(self, query):
         url = self.url + "employers/"
         self.params["text"] = query
+        employers_list = []
 
-        response = requests.get(url, headers=self.headers, params=self.params)
-        employers = response.json()["items"]
-        return employers
+        while self.params["page"] != 10:
+            response = requests.get(url, headers=self.headers, params=self.params)
+            employers = response.json()["items"]
+            employers_list.extend(employers)
+            self.params["page"] += 1
+        return [employers_list, "emp"]
 
     def employer_vacancies(self, employer_id):
         """ Получение вакансий по ID работодателя """
