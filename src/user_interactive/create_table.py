@@ -68,6 +68,7 @@ class ColumnNamesBox(BoxLayout):
         self.orientation = "vertical"
 
         self.add_widget(ColumnsInput(quantity))
+        self.add_widget(NavigationBox())
         self.add_widget(CreateTableButton(table_name))
 
 
@@ -91,11 +92,33 @@ class ColumnInput(BoxLayout):
         self.add_widget(TextInput(hint_text="Column type (default = text)", multiline=False))
 
 
+class NavigationBox(BoxLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.size_hint = (1, .2)
+
+        self.add_widget(NavigationButtons(index="left", text="<--", font_size=100))
+
+        self.add_widget(NavigationButtons(index="right", text="-->", font_size=100))
+
+
+class NavigationButtons(Button):
+    def __init__(self, index, **kwargs):
+        super().__init__(**kwargs)
+        self.index = index
+
+    def on_press(self):
+        if self.index == "left":
+            self.parent.parent.children[2].load_previous()
+        elif self.index == "right":
+            self.parent.parent.children[2].load_next()
+
+
 class CreateTableButton(Button):
     def __init__(self, table_name, **kwargs):
         super().__init__(**kwargs)
         self.text = "Create table"
-        self.size_hint = (1, .2)
+        self.size_hint = (1, .3)
 
         self.table_name = table_name
 

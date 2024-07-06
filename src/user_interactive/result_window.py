@@ -89,11 +89,12 @@ class FileWorkBox(BoxLayout):
 class FileWorkButtons(Button):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.user = WorkWithSQL()
 
     def on_press(self):
-        user = WorkWithSQL()
-        content = self.parent.parent.children[2].current_slide.content
-        if isinstance(content, Vacancy):
-            user.save_vacancy(content)
-        elif isinstance(content, Employer):
-            user.save_employer(content)
+        if self.text == "Save":
+            content = self.parent.parent.children[2].current_slide.content
+            if isinstance(content, Vacancy):
+                self.user.save_vacancy(content)
+            elif isinstance(content, Employer):
+                self.user.save_employer(content)

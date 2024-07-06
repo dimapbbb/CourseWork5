@@ -34,6 +34,7 @@ class QueryInput(TextInput):
         self.font_size = 50
         self.multiline = False
         self.query = ""
+        self.hint_text = "Keywords"
 
     def on_text_validate(self):
         self.query = self.text
