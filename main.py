@@ -1,3 +1,7 @@
+from kivy.config import Config
+Config.set("graphics", "height", "800")
+Config.set("graphics", "width", "400")
+
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager
 

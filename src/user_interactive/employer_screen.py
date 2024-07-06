@@ -21,7 +21,7 @@ class EmployerWidget(BoxLayout):
         super().__init__(**kwargs)
         self.orientation = "vertical"
 
-        self.add_widget(Label(text="Введите запрос:", font_size=100))
+        self.add_widget(Label(text="Введите запрос:", font_size=30))
         self.add_widget(QueryInput())
         self.add_widget(SearchButton())
         self.add_widget(QuitButton())
