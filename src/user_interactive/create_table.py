@@ -29,15 +29,17 @@ class CreateTableWidget(BoxLayout):
 class TableName(TextInput):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.hint_text = "Enter table name"
+        self.hint_text = "Enter table name (NOT NULL, str, 1_word)"
         self.size_hint = (1, .2)
+        self.multiline = False
 
 
 class QuantityColumns(TextInput):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.hint_text = "Quantity columns = 1"
+        self.hint_text = "Введите колличество колонок (NOT NUll, int)"
         self.size_hint = (1, .2)
+        self.multiline = False
 
 
 class NextButton(Button):
@@ -49,7 +51,8 @@ class NextButton(Button):
     def on_press(self):
         quantity = self.parent.children[2].text
         table_name = self.parent.children[3].text
-        ColumnNamesWindow(quantity, table_name).open()
+        if quantity and table_name and quantity.isdigit() and len(table_name.split()) == 1:
+            ColumnNamesWindow(quantity, table_name).open()
 
 
 class ColumnNamesWindow(ModalView):
@@ -64,12 +67,12 @@ class ColumnNamesBox(BoxLayout):
         super().__init__(**kwargs)
         self.orientation = "vertical"
 
-        self.add_widget(ColumnsInput(quantity=quantity))
+        self.add_widget(ColumnsInput(quantity))
         self.add_widget(CreateTableButton(table_name))
 
 
 class ColumnsInput(Carousel):
-    def __init__(self, quantity=1, **kwargs):
+    def __init__(self, quantity, **kwargs):
         super().__init__(**kwargs)
 
         self.columns_input = ["" for _ in range(int(quantity))]
@@ -84,8 +87,8 @@ class ColumnInput(BoxLayout):
         super().__init__(**kwargs)
         self.orientation = "vertical"
 
-        self.add_widget(TextInput(hint_text="Column name", multiline=False))
-        self.add_widget(TextInput(hint_text="Column type", multiline=False))
+        self.add_widget(TextInput(hint_text="Column name (default = column)", multiline=False))
+        self.add_widget(TextInput(hint_text="Column type (default = text)", multiline=False))
 
 
 class CreateTableButton(Button):
@@ -98,10 +101,14 @@ class CreateTableButton(Button):
 
     def on_press(self):
         columns = []
-        for column_input in self.parent.children[1].columns_input:
+        for i, column_input in enumerate(self.parent.children[1].columns_input):
 
-            column_name = column_input.children[1].text
+            column_text = column_input.children[1].text
+            column_name = column_text if column_text else f"column_{i}"
+
             column_type = column_input.children[0].text
+            column_type = column_type if column_type else "text"
+
             column = column_name + " " + column_type
             columns.append(column)
 
