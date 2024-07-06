@@ -53,3 +53,9 @@ class DBManager(WorkWithSQL):
             with conn.cursor() as cur:
                 cur.execute(query)
                 return cur.fetchall()
+
+    def create_table(self, query):
+        with psycopg2.connect(**self.conn_params) as conn:
+            with conn.cursor() as cur:
+                cur.execute(query)
+                conn.commit()
