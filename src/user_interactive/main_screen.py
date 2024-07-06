@@ -26,7 +26,7 @@ class MainWidget(BoxLayout):
 class MainLabel(Label):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.text = "Вас приветсвует парсер по вакансиям с hh.ru"
+        self.text = "Вас приветсвует парсер по hh.ru"
         self.font_size = 30
 
 
