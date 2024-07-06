@@ -5,6 +5,7 @@ from kivy.uix.label import Label
 from kivy.uix.modalview import ModalView
 
 from src.employer import Employer
+from src.file_worker import WorkWithSQL
 from src.vacancy import Vacancy
 
 
@@ -23,6 +24,7 @@ class ResultWidget(BoxLayout):
         self.add_widget(LabelInfo(len(query[0])))
         self.add_widget(ResultBox(query))
         self.add_widget(NavigationBox())
+        self.add_widget(FileWorkBox())
 
 
 class LabelInfo(Label):
@@ -40,11 +42,18 @@ class ResultBox(Carousel):
         if query[1] == "emp":
             for i in range(len(query[0])):
                 employer = Employer.new_employer(query[0][i])
-                self.add_widget(Label(text=str(employer), font_size=25))
+                self.add_widget(PrintResult(text=str(employer), content=employer))
         elif query[1] == "vac":
             for i in range(len(query[0])):
                 vacancy = Vacancy.new_vacancy(query[0][i])
-                self.add_widget(Label(text=str(vacancy), font_size=25))
+                self.add_widget(PrintResult(text=str(vacancy), content=vacancy))
+
+
+class PrintResult(Label):
+    def __init__(self, content, **kwargs):
+        super().__init__(**kwargs)
+        self.font_size = 25
+        self.content = content
 
 
 class NavigationBox(BoxLayout):
@@ -65,6 +74,26 @@ class NavigationButtons(Button):
         if self.index == "new_query":
             self.parent.parent.parent.dismiss()
         elif self.index == "left":
-            self.parent.parent.children[1].load_previous()
+            self.parent.parent.children[2].load_previous()
         elif self.index == "right":
-            self.parent.parent.children[1].load_next()
+            self.parent.parent.children[2].load_next()
+
+
+class FileWorkBox(BoxLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        self.add_widget(FileWorkButtons(text="Save"))
+
+
+class FileWorkButtons(Button):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def on_press(self):
+        user = WorkWithSQL()
+        content = self.parent.parent.children[2].current_slide.content
+        if isinstance(content, Vacancy):
+            user.save_vacancy(content)
+        elif isinstance(content, Employer):
+            user.save_employer(content)
