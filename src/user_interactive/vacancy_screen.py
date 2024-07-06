@@ -35,6 +35,7 @@ class QueryInput(TextInput):
         self.font_size = 50
         self.multiline = False
         self.query = ""
+        self.hint_text = "Keywords"
 
     def on_text_validate(self):
         self.query = self.text
@@ -52,8 +53,8 @@ class QuantityInput(TextInput):
         self.size_hint = (1, .2)
         self.font_size = 50
         self.multiline = False
-        self.quantity = 1990
-        self.hint_text = "Quantity = 2000"
+        self.quantity = 1999
+        self.hint_text = "Колличество результатов (мах2000)"
 
     def on_text_validate(self):
         self.quantity = self.text

@@ -20,7 +20,7 @@ class MainWidget(BoxLayout):
         self.add_widget(MainLabel())
         self.add_widget(MainButtons(index=0, text="По вакансиям"))
         self.add_widget(MainButtons(index=1, text="По работодателям"))
-        self.add_widget(MainButtons(index=2, text="Сохраненое"))
+        self.add_widget(MainButtons(index=2, text="DBManager"))
 
 
 class MainLabel(Label):
@@ -42,5 +42,5 @@ class MainButtons(Button):
         elif self.index == 1:
             self.parent.parent.manager.current = "emp_scr"
         elif self.index == 2:
-            self.parent.parent.manager.current = "save_scr"
+            self.parent.parent.manager.current = "DBM_scr"
 
